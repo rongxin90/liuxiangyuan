@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>{{title}}</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            zoom: 1;
+            outline: none;
+        }
+    
+    html, img {
+        border: 0 none;
+    }
+    
+    html {
+        overflow-y: scroll;
+        overflow-x: auto;
+        background-color: #f8f8f8;
+    }
+    
+    body {
+        background-color: #f8f8f8;
+        font-size: 15px;
+        line-height:26px;
+        color: #666;
+        height: 100%;
+        width: 100%;
+    }
+    
+    img {
+        display: block;
+        width: 100%;
+        cursor: pointer;
+    }
+    
+    .realBody {
+        padding: 15px 15px 10px;
+    }
+    
+    .title_section {
+        text-align: center;
+    }
+    
+    .title_section h1 {
+        font-size: 18px;
+        margin: 5px 0 0px;
+        color: #404040;
+    }
+    .title_section .subtitle {
+        font-size: 14px;
+        margin: 5px 0 5px;
+    }
+    .body_section p {
+        text-indent: 2em;
+        margin: 10px 0;
+    }
+    
+    .body_section img {
+        text-align: center;
+    }
+    </style>
+</head>
+<body>
+    <div class="realBody">
+        <div class="title_section">
+            <h1>{{title}}</h1>
+            <div class="subtitle">{{time}}</div>
+        </div>
+        <div class="body_section" id="body_section">
+            <div class="body_content">
+              {{body}}
+            </div>          
+        </div>
+    </div>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script>
+        var imgstr = [];
+        $(".body_section img").each(function (i) {
+            imgstr.push($(this).attr("src"));
+            $(this).click(function () {
+                location = "image://?url=" + imgstr + "&currentIndex=" + i;
+            })
+        })
+    </script>
+</body>
+</html>
