@@ -83,6 +83,7 @@
             imgstr.push($(this).attr("src"));
             $(this).click(function () {
                 location = "image://?url=" + imgstr + "&currentIndex=" + i;
+                          alert(imgstr);
             })
         })
     </script>
