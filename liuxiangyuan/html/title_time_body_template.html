@@ -69,6 +69,7 @@
         <div class="title_section">
             <h1>{{title}}</h1>
             <div class="subtitle">{{time}}</div>
+            <button onclick="hao()">我是按钮</button>
         </div>
         <div class="body_section" id="body_section">
             <div class="body_content">
@@ -78,12 +79,17 @@
     </div>
     <script type="text/javascript" src="jquery.js"></script>
     <script>
-        var imgstr = [];
+        
+        function hao(){
+            alert("哈哈哈");
+        }
+    
         $(".body_section img").each(function (i) {
             imgstr.push($(this).attr("src"));
             $(this).click(function () {
+                          $('p').css('color','red');
                 location = "image://?url=" + imgstr + "&currentIndex=" + i;
-                          alert(imgstr);
+
             })
         })
     </script>

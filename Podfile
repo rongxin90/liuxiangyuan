@@ -7,6 +7,7 @@ pod 'MJExtension', '~> 3.0.13'
 pod 'SDWebImage', '~>3.8'
 pod 'SDCycleScrollView','~> 1.64'
 pod 'Masonry', '~> 1.0.2'
+pod 'SVProgressHUD', '~> 2.1.2'
 
 end
 

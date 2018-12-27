@@ -17,6 +17,7 @@
 #import "TellPhoneViewController.h"
 #import "BlindSetViewController.h"
 #import "MineViewController.h"
+#import "SocketViewController.h"
 
 #define randomColor [UIColor colorWithRed:arc4random_uniform(256)/255.0 green:arc4random_uniform(256)/255.0 blue:arc4random_uniform(256)/255.0 alpha:1.0]
 
@@ -122,7 +123,7 @@
     
     //添加item
     [tabbar addtabbarItemWithNormalImage:@"icon_tabbar_home~iphone" andSelectedImage:@"icon_tabbar_home_sel~iphone" WithTitle:@"首页"];
-    [tabbar addtabbarItemWithNormalImage:@"icon_tabbar_store~iphone" andSelectedImage:@"icon_tabbar_store_sel~iphone" WithTitle:@"服务汇"];
+    [tabbar addtabbarItemWithNormalImage:@"icon_tabbar_store~iphone" andSelectedImage:@"icon_tabbar_store_sel~iphone" WithTitle:@"通信"];
     [tabbar addtabbarItemWithNormalImage:@"icon_tabbar_tel~iphone" andSelectedImage:@"icon_tabbar_tel_sel~iphone" WithTitle:nil];
     [tabbar addtabbarItemWithNormalImage:@"icon_tabbar_forum~iphone" andSelectedImage:@"icon_tabbar_forum_sel~iphone" WithTitle:@"相亲汇"];
     [tabbar addtabbarItemWithNormalImage:@"icon_tabbar_mine~iphone" andSelectedImage:@"icon_tabbar_mine_sel~iphone" WithTitle:@"我的"];
@@ -139,7 +140,7 @@
 //    rootVC1.view.backgroundColor = randomColor;
     [self grx_addChildViewControllerWithRootVC:rootVC1 normalImage:@"icon_tabbar_home~iphone" withSelectedImage:@"icon_tabbar_home_sel~iphone"];
 
-    ServiceSetViewController *rootVC2 = [[ServiceSetViewController alloc] init];
+    SocketViewController *rootVC2 = [[SocketViewController alloc] init];
     rootVC2.view.backgroundColor = randomColor;
     [self grx_addChildViewControllerWithRootVC:rootVC2 normalImage:@"icon_tabbar_store~iphone" withSelectedImage:@"icon_tabbar_store_sel~iphone"];
     

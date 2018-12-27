@@ -27,6 +27,9 @@
 #import <SDCycleScrollView/SDCycleScrollView.h>
 #import "GRXHTMLController.h"
 
+//#import "GRXCardViewController.h"
+#import "QRCodeViewController.h"
+
 @interface HomeViewController ()<GRXCarouselImageViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate,SDCycleScrollViewDelegate,UITableViewDelegate,UITableViewDataSource>
 
 {
@@ -170,23 +173,8 @@ static NSString *idfinerID = @"idfinerID";
 //tableView头部视图轮播图设置
 - (void)setUpHeaderView{
     
-    CGFloat screenW = [UIScreen mainScreen].bounds.size.width;
-    CGRect rect = CGRectMake(0, 0, self.view.width, 100);
-    
-//    GRXCarouselImageView *headerView = [[GRXCarouselImageView alloc] initWithFrame:rect];
-//    headerView.backgroundColor = [UIColor redColor];
-//    headerView.delegate = self;
-////    headerView.imagesArray = self.focusArray;
-//    self.headerView = headerView;
-    
-//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    btn.frame = rect;
-//    [btn addTarget:self action:@selector(clickBtn) forControlEvents:UIControlEventTouchUpInside];
-//    UIView *view = [[UIView alloc] init];
-//    view.frame = rect;
-//    NSLog(@"%@",_tableView);
-//    self.tableView.sectionHeaderHeight = 100;
-//    self.tableView.tableHeaderView = btn;
+//    CGFloat screenW = [UIScreen mainScreen].bounds.size.width;
+//    CGRect rect = CGRectMake(0, 0, self.view.width, 100);
 
     _scrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, self.view.width, 200) imageNamesGroup:_imageArray];
 //    _scrollView.imageURLStringsGroup = _imageArray;
@@ -309,14 +297,14 @@ static NSString *idfinerID = @"idfinerID";
     urlString = [urlString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [GRXNetWorkTool grx_loadDataWithUrlString:urlString andParameter:nil reloadData:^(NSDictionary *reloadData) {
-        _focusArray = [GRXFocusModel mj_objectArrayWithKeyValuesArray:reloadData[@"data"][@"focusList"]];
-        for (GRXFocusModel *model in _focusArray) {
-            [_imageArray addObject:model.small_pic];
-            [_urlArray addObject:model.newsUrl];
+        self->_focusArray = [GRXFocusModel mj_objectArrayWithKeyValuesArray:reloadData[@"data"][@"focusList"]];
+        for (GRXFocusModel *model in self->_focusArray) {
+            [self->_imageArray addObject:model.small_pic];
+            [self->_urlArray addObject:model.newsUrl];
         }
         
 //        NSLog(@"%@",_imageArray);
-        _scrollView.imageURLStringsGroup = _imageArray;
+        self->_scrollView.imageURLStringsGroup = _imageArray;
     }];
 }
 
@@ -324,9 +312,42 @@ static NSString *idfinerID = @"idfinerID";
 - (void)setUpNavigation{
     
     self.navigationItem.title = @"绿城留香园";//只对navigationItem有效
-    
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"导航" style:0 target:self action:@selector(navigationItemClick)];
     self.navigationItem.leftBarButtonItem = leftItem;
+    
+    
+   
+//    UIBarButtonItem *item1 = [[UIBarButtonItem alloc] initWithCustomView:view];
+    
+    UIButton *rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+//    rightBtn.frame = CGRectMake(0, 0, 50, 50);
+    UIImage *image = [UIImage imageNamed:@"scan-normal"];
+    UIImage *imageTouch = [UIImage imageNamed:@"scan-highlight"];
+    [rightBtn addTarget:self action:@selector(rightBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [rightBtn setBackgroundImage:image forState:UIControlStateNormal];
+    [rightBtn setBackgroundImage:imageTouch forState:UIControlStateHighlighted];
+    
+    
+    UIView *view = [[UIView alloc] init];
+    view.frame = rightBtn.bounds;
+
+    
+    [view addSubview:rightBtn];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:view];
+    self.navigationItem.rightBarButtonItems =@[rightItem];
+}
+
+-(void)rightBtnClick{
+    
+    QRCodeViewController *QRCodeVC =[[QRCodeViewController alloc] init];
+    
+    
+    //通过StoryBoardID来获取StoryBoard创建的控制器0
+//    UIStoryboard *story = [UIStoryboard storyboardWithName:@"QRCodeController" bundle:[NSBundle mainBundle]];
+//
+//
+//    QRCodeController *qrcode = [story instantiateViewControllerWithIdentifier:@"QRCodeVC"];
+    [self.navigationController pushViewController:QRCodeVC animated:YES];
 }
 
 - (void)navigationItemClick{

@@ -7,7 +7,10 @@
 //
 
 #import "SocketViewController.h"
-
+#import "severNavController.h"
+#import "clientNavController.h"
+#import "severController.h"
+#import "clientController.h"
 @interface SocketViewController ()
 
 @end
@@ -16,7 +19,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor lightGrayColor];
+    
+    
+    severController *root1 = [[severController alloc] init];
+    root1.title = @"服务器";
+    severNavController *nav1 = [[severNavController alloc] initWithRootViewController:root1];
+    //    nav1.title = @"服务器";
+    
+    clientController *root2 = [[clientController alloc] init];
+    root2.title = @"客户端";
+    clientNavController *nav2 = [[clientNavController alloc] initWithRootViewController:root2];
+    
+    [self addChildViewController:nav1];
+    [self addChildViewController:nav2];
+    
+    NSLog(@"%@",self.childViewControllers);
 }
 
 /*

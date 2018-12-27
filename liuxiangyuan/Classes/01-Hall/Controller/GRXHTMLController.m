@@ -13,6 +13,7 @@
 #import "HtmlModel.h"
 #import <WebKit/WebKit.h>
 #import <JavaScriptCore/JavaScriptCore.h>
+#import <SVProgressHUD.h>
 @interface GRXHTMLController ()<WKScriptMessageHandler,WKNavigationDelegate,WKUIDelegate>
 {
     NSMutableArray *_dataArray;
@@ -36,6 +37,9 @@
 //    NSLog(@"viewDidLoad=---%@",self.url);
 //    _title = [NSString string];
 //    _dataArray = [NSMutableArray array];
+//    if (<#condition#>) {
+//        <#statements#>
+//    }
     [self addSubviewsWithUrl:self.url];
     [self loadDataWithUrl:self.url];
 }
@@ -63,7 +67,7 @@
     preferences.javaScriptCanOpenWindowsAutomatically = YES;
     config.preferences = preferences;
     //注册js方法
-//    [config.userContentController addScriptMessageHandler:self name:@"loading"];
+    [config.userContentController addScriptMessageHandler:self name:@"show"];
     
     _webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height) configuration:config];
  
@@ -93,14 +97,29 @@
  *  @param frame             主窗口
  *  @param completionHandler 警告框消失调用
  */
-- (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler{
+// confirm
+//作为js中confirm接口的实现，需要有提示信息以及两个相应事件， 确认及取消，并且在completionHandler中回传相应结果，确认返回YES， 取消返回NO
+//参数 message为  js 方法 confirm(<message>) 中的<message>
+- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completionHandler{
     
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:message?:@"" preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:([UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        completionHandler(NO);
+    }])];
+    
+    [alertController addAction:([UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        completionHandler(YES);
+    }])];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 
 
+
+
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
-//    NSLog(@"%@",message);
+    NSLog(@"message = %@",message.name);
 }
 
 
@@ -152,28 +171,41 @@
     
     
     //修改标题
-    
-    
-
-    NSString *str = [NSString stringWithFormat:@"$('h1')[0].innerText = '%@';$('.subtitle')[0].innerText = '%@';",self.model.title,self.model.intime];
-//    str = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-
+    if (!self.model) {
+        [SVProgressHUD show];
+        [webView reload];
+    }else{
+        [SVProgressHUD dismiss];
+        NSString *str = [NSString stringWithFormat:@"$('h1')[0].innerText = '%@';$('.subtitle')[0].innerText = '%@';",self.model.title,self.model.intime];
+        
+        
         [_webView evaluateJavaScript:str completionHandler:^(id _Nullable response, NSError * _Nullable error) {
             NSLog(@"%@-----%@",response,error);
         }];
+        
+        
+        
+        
+        NSString *htmlInsert = [NSString stringWithFormat:@"$('.body_content').html('%@')",self.model.content];
+        //    htmlInsert = [htmlInsert stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        [_webView evaluateJavaScript:htmlInsert completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+            NSLog(@"response=%@-----error=%@",response,error);
+        }];
+    }
 
     
     
-
-    NSString *htmlInsert = [NSString stringWithFormat:@"$('.body_content').html('%@')",self.model.content];
-//    htmlInsert = [htmlInsert stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    [_webView evaluateJavaScript:htmlInsert completionHandler:^(id _Nullable response, NSError * _Nullable error) {
-        NSLog(@"response=%@-----error=%@",response,error);
-    }];
+    
+    
 
     
 }
+
+- (void)print{
+    NSLog(@"打印出来");
+}
+
+
 
 //页面加载失败时调用
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error{
